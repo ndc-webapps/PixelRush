@@ -2040,3 +2040,84 @@ body.admin-locked .site-footer { display: none !important; }
   .library-hero h1 { font-size: clamp(2.3rem, 12vw, 3.6rem); }
   #library .control-band { margin-top: -1.5rem; }
 }
+
+
+/* =====================================================================
+   Neon arcade nav buttons (Home / Library / Admin)
+   ===================================================================== */
+.site-header .main-nav {
+  gap: .75rem;
+}
+.site-header .main-nav a {
+  position: relative;
+  isolation: isolate;
+  padding: .62rem 1.15rem .68rem;
+  border: 2px solid #bfe6ff;
+  border-radius: .55rem;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: .01em;
+  text-transform: none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 38%),
+    linear-gradient(180deg, #4db4ff 0%, #2f7cf6 52%, #2f43e0 100%);
+  text-shadow: 0 1px 0 #11214d, 0 2px 4px rgba(0,0,0,.45);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -3px 6px rgba(8,14,48,.55),
+    0 0 0 2px #2740b8,
+    0 0 14px rgba(59,231,255,.45),
+    0 8px 18px rgba(13,20,60,.5);
+  transition: transform .14s ease, box-shadow .18s ease, filter .18s ease;
+}
+/* Star badge */
+.site-header .main-nav a::after {
+  content: "★";
+  position: absolute;
+  top: -.5rem;
+  right: -.4rem;
+  font-size: .82rem;
+  line-height: 1;
+  color: #ffd23f;
+  text-shadow: 0 0 6px rgba(255,210,63,.8), 0 1px 0 #8a5a00;
+  transform: rotate(8deg);
+  z-index: 2;
+}
+.site-header .main-nav a:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.6),
+    inset 0 -3px 6px rgba(8,14,48,.55),
+    0 0 0 2px #3a5bff,
+    0 0 22px rgba(59,231,255,.7),
+    0 12px 24px rgba(13,20,60,.55);
+}
+.site-header .main-nav a:active {
+  transform: translateY(1px);
+}
+/* Active page: brighter cyan halo */
+.site-header .main-nav a.is-active {
+  border-color: #d4f3ff;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0) 40%),
+    linear-gradient(180deg, #5cc6ff 0%, #3b8cff 52%, #3550f0 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.7),
+    inset 0 -3px 6px rgba(8,14,48,.5),
+    0 0 0 2px #4f6bff,
+    0 0 26px rgba(59,231,255,.85),
+    0 10px 22px rgba(13,20,60,.55);
+}
+
+/* Mobile dropdown: keep arcade look, drop the offset star so it doesn't clip */
+@media (max-width: 720px) {
+  .site-header .main-nav a {
+    width: 100%;
+    text-align: center;
+  }
+  .site-header .main-nav a::after {
+    top: .35rem;
+    right: .5rem;
+  }
+}
