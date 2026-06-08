@@ -2,6 +2,7 @@ const STORE_KEY = "pixelrush_custom_games_v1";
 const PLAYS_KEY = "pixelrush_play_counts_v1";
 const FAV_KEY = "pixelrush_favorites_v1";
 const RECENT_KEY = "pixelrush_recent_games_v1";
+const CURRENT_KEY = "pixelrush_current_game_v1";
 const LOGO_SRC = "./assets/pixelrush-logo.png";
 
 const categories = ["All","Arcade","Puzzle","Strategy","Board","Racing","Shooter","Cards","Sports","Brain","Retro","Classic","Creative","Shooting","Survival","Cooking","Dress Up","Adventure"];
@@ -3865,6 +3866,16 @@ function setRoute(hash) {
   });
   $("#mainNav")?.classList.remove("is-open");
   if (page === "library" && $("#library")) renderLibrary();
+  // Restore the game after a refresh on #play (currentGame is in-memory only).
+  if (page === "play" && $("#play") && !state.currentGame) {
+    let lastId = "";
+    try { lastId = localStorage.getItem(CURRENT_KEY) || ""; } catch {}
+    if (lastId && gameById(lastId)) {
+      openGame(lastId);
+    } else {
+      location.replace("#library");
+    }
+  }
 }
 
 
@@ -4015,6 +4026,7 @@ function openGame(id) {
   const game = gameById(id);
   if (!game || !game.isPlayable) return;
   state.currentGame = game;
+  try { localStorage.setItem(CURRENT_KEY, id); } catch {}
   state.playCounts[id] = (state.playCounts[id] || 0) + 1;
   trackEvent("play_game", {
     game: game.title,
