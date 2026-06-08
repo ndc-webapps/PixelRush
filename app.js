@@ -3975,7 +3975,6 @@ function buildExternalEmbedDoc(game) {
       </iframe>
     </div>
   </div>
-  <div class="note">Centered smart-fit embed • popups and top navigation blocked</div>
 <script>
   const naturalWidth = ${width};
   const naturalHeight = ${height};
