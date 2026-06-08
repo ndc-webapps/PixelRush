@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PixelRush is a premium modern browser game portal with instant playable arcade, puzzle, board, and strategy games."
+    />
+    <title>PixelRush - Premium Browser Games</title>
+    <link rel="icon" href="./assets/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="admin-page-body admin-locked">
+    <div id="loader" class="loader">
+      <img class="loader-logo" src="./assets/pixelrush-logo.png" alt="PixelRush" />
+      <p>Loading PixelRush Admin</p>
+    </div>
+
+    <div id="adminGate" class="admin-gate">
+      <form id="adminGateForm" class="admin-gate-card">
+        <img class="admin-gate-logo" src="./assets/pixelrush-logo.png" alt="PixelRush" />
+        <h1>Admin Access</h1>
+        <p>Enter the admin password to manage the PixelRush library.</p>
+        <input id="adminGatePass" type="password" placeholder="Password" autocomplete="current-password" required />
+        <p id="adminGateError" class="admin-gate-error" hidden>Wrong password. Try again.</p>
+        <button type="submit" class="primary-button">Unlock Dashboard</button>
+        <a class="admin-gate-back" href="./index.html">← Back to PixelRush</a>
+      </form>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="PixelRush home">
+        <img class="brand-logo" src="./assets/pixelrush-logo.png" alt="PixelRush" />
+      </a>
+      <button id="menuToggle" class="icon-button menu-toggle" aria-label="Open navigation">☰</button>
+      <nav id="mainNav" class="main-nav" aria-label="Primary navigation">
+        <a href="./index.html">Home</a>
+        <a href="./index.html#library">Library</a>
+        <a class="is-active" href="./admin.html">Admin</a>
+      </nav>
+    </header>
+
+    <main>
+      
+
+      <section id="admin" class="page is-active" data-page="admin">
+        <section class="page-top admin-top">
+          <div>
+            <p class="eyebrow">PixelRush admin</p>
+            <h1>Game Dashboard</h1>
+            <p>Publish your own HTML games or paste an iframe/embed URL/card snippet from another site.</p>
+          </div>
+          <div class="admin-top-actions">
+            <button id="adminLockButton" type="button" class="secondary-button">Lock</button>
+            <button id="newGameButton" class="primary-button">Add New Game</button>
+          </div>
+        </section>
+
+        <section class="admin-layout">
+          <form id="gameForm" class="admin-panel">
+            <input type="hidden" id="gameId" />
+            <div class="form-grid">
+              <label>
+                Game title
+                <input id="gameTitle" required placeholder="Neon Runner" />
+              </label>
+              <label>
+                Category
+                <select id="gameCategory" required>
+                  <option>Action</option>
+                  <option>Shooting</option>
+                  <option>Racing</option>
+                  <option>Sports</option>
+                  <option>Puzzle</option>
+                  <option>Arcade</option>
+                  <option>Adventure</option>
+                  <option>Cooking</option>
+                  <option>Dress Up</option>
+                  <option>Girls</option>
+                  <option>Fighting</option>
+                  <option>Strategy</option>
+                  <option>Multiplayer</option>
+                  <option>2 Player</option>
+                  <option>Simulation</option>
+                  <option>Platformer</option>
+                  <option>Casual</option>
+                  <option>Kids</option>
+                  <option>Horror</option>
+                  <option>Survival</option>
+                </select>
+              </label>
+              <label class="wide">
+                Thumbnail image URL
+                <input id="gameThumb" placeholder="https://..." />
+              </label>
+              <label>
+                Tags
+                <input id="gameTags" placeholder="arcade, quick, skill" />
+              </label>
+              <label>
+                Difficulty
+                <select id="gameDifficulty">
+                  <option>Easy</option>
+                  <option selected>Normal</option>
+                  <option>Hard</option>
+                </select>
+              </label>
+              <label>
+                Game type
+                <select id="gameType">
+                  <option selected>Embedded URL</option>
+                  <option>Custom HTML</option>
+                </select>
+              </label>
+              <label>
+                Max level
+                <input id="gameMaxLevel" type="number" min="1" value="1" />
+              </label>
+              <label>
+                Controls
+                <input id="gameControls" placeholder="Arrow keys, tap, click" />
+              </label>
+              <label>
+                Progression type
+                <select id="gameProgression">
+                  <option value="None">None</option>
+                  <option value="Level based">Level based</option>
+                  <option value="Wave based">Wave based</option>
+                  <option value="Rounds">Rounds</option>
+                  <option value="Score target">Score target</option>
+                </select>
+              </label>
+              <label class="wide">
+                <span>Supports</span>
+                <div class="support-grid">
+                  <label><input id="gameSupports2P" type="checkbox" /> 2 Player</label>
+                  <label><input id="gameSupportsBot" type="checkbox" /> Bot / AI</label>
+                </div>
+              </label>
+              <label class="wide">
+                Description
+                <textarea id="gameDescription" required placeholder="A quick skill game built for PixelRush."></textarea>
+              </label>
+              <p class="admin-warning wide">
+                Custom code is previewed and played only inside a sandboxed iframe. Paste code you trust and never paste secrets.
+              </p>
+              <label class="wide">
+                Game code, embed URL, iframe code, or Y8 card snippet
+                <textarea id="gameCode" class="code-input" required spellcheck="false"></textarea>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button type="button" id="previewButton" class="secondary-button">Preview</button>
+              <button type="submit" class="primary-button">Publish Game</button>
+              <button type="button" id="cancelEditButton" class="secondary-button">Reset</button>
+            </div>
+          </form>
+
+          <section class="preview-panel">
+            <div class="player-toolbar">
+              <span>Game Preview</span>
+              <span class="safe-pill">sandboxed</span>
+            </div>
+            <iframe id="previewFrame" title="PixelRush admin preview" sandbox="allow-scripts"></iframe>
+          </section>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading compact">
+            <h2>Custom Published Games</h2>
+          </div>
+          <div id="customGamesList" class="admin-list"></div>
+          <div id="adminEmpty" class="empty-state" hidden>
+            <h2>No custom PixelRush games yet</h2>
+            <p>Paste a complete HTML game or embed URL and publish it to your PixelRush library.</p>
+          </div>
+        </section>
+      </section>
+    
+    </main>
+
+    <footer class="site-footer">
+      <strong>PixelRush</strong>
+      <span>Premium browser games, built for instant play.</span>
+    </footer>
+
+    <script src="./y8-catalog.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

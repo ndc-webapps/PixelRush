@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PixelRush is a premium modern browser game portal with instant playable arcade, puzzle, board, and strategy games."
+    />
+    <title>PixelRush - Premium Browser Games</title>
+    <link rel="icon" href="./assets/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="loader" class="loader">
+      <img class="loader-logo" src="./assets/pixelrush-logo.png" alt="PixelRush" />
+      <p>Loading PixelRush</p>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="PixelRush home">
+        <img class="brand-logo" src="./assets/pixelrush-logo.png" alt="PixelRush" />
+      </a>
+      <button id="menuToggle" class="icon-button menu-toggle" aria-label="Open navigation">☰</button>
+      <nav id="mainNav" class="main-nav" aria-label="Primary navigation">
+        <a href="#home">Home</a>
+        <a href="#library">Library</a>
+        <a href="./admin.html">Admin</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="page is-active" data-page="home">
+        <section class="hero">
+          <div class="hero-bg" aria-hidden="true"></div>
+          <div class="pixel-field" aria-hidden="true"></div>
+          <div class="hero-content">
+            <img class="hero-logo" src="./assets/pixelrush-logo.png" alt="PixelRush" />
+            <p class="eyebrow">Instant arcade • plays inside PixelRush</p>
+            <h1>Play Fast. Beat High Scores.</h1>
+            <p>
+              Hundreds of free web games — action, racing, puzzle, cooking and more — embedded and playable without leaving the site.
+            </p>
+            <div class="hero-marquee" aria-label="Hot games">
+              <span>🔥 Hot now</span>
+              <button type="button" data-quick="y8-slope">Slope</button>
+              <button type="button" data-quick="y8-moto-x3m-2">Moto X3M 2</button>
+              <button type="button" data-quick="y8-fireboy-and-watergirl-forest-temple">Fireboy & Watergirl</button>
+              <button type="button" data-quick="y8-football-legends-2016">Football Legends</button>
+            </div>
+            <label class="hero-search">
+              <span>Search games</span>
+              <input id="heroSearch" type="search" placeholder="Try Snake, Tank, Tetris, Shooter..." />
+            </label>
+            <div class="hero-actions">
+              <button id="randomGameButton" class="primary-button" type="button">Play Random Game</button>
+              <a class="secondary-button" href="#library">Browse Games</a>
+            </div>
+            <div class="hero-stats" aria-label="Portal stats">
+              <div><strong>600+</strong><span>Embedded web games</span></div>
+              <div><strong>20</strong><span>Clean categories</span></div>
+              <div><strong>0</strong><span>Redirects — plays in-site</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="control-band home-controls">
+          <label class="search-shell">
+            <span>Search</span>
+            <input id="globalSearch" type="search" placeholder="Find Snake, Chess, Shooter..." />
+          </label>
+          <div id="categoryFilters" class="chip-row" aria-label="Game categories"></div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Jump back in</p>
+              <h2>Continue Playing</h2>
+            </div>
+          </div>
+          <div id="continueGrid" class="game-grid compact-grid"></div>
+          <div id="continueEmpty" class="empty-state mini" hidden>
+            <h2>No recent games yet</h2>
+            <p>Play a PixelRush game and it will appear here.</p>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Spotlight</p>
+              <h2>Featured Games</h2>
+            </div>
+            <a href="#library">View all</a>
+          </div>
+          <div id="featuredGrid" class="game-grid"></div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Saved by you</p>
+              <h2>Favorites</h2>
+            </div>
+          </div>
+          <div id="favoritesGrid" class="game-grid compact-grid"></div>
+          <div id="favoritesEmpty" class="empty-state mini" hidden>
+            <h2>No favorites saved</h2>
+            <p>Use the heart on a game card or player page to save it.</p>
+          </div>
+        </section>
+
+        <section class="content-section split-sections">
+          <div>
+            <div class="section-heading compact">
+              <h2>Popular Games</h2>
+            </div>
+            <div id="popularGrid" class="game-grid compact-grid"></div>
+          </div>
+          <div>
+            <div class="section-heading compact">
+              <h2>Recently Added</h2>
+            </div>
+            <div id="recentGrid" class="game-grid compact-grid"></div>
+          </div>
+        </section>
+
+        <section class="content-section y8-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">More games</p>
+              <h2>Web Game Arcade</h2>
+            </div>
+            <p class="section-note">600+ verified embeddable web games, playable in-site.</p>
+          </div>
+          <div id="y8CategoryPills" class="chip-row y8-pills" aria-label="Y8 game groups"></div>
+          <div id="y8Grid" class="game-grid"></div>
+        </section>
+        <section class="content-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Curated rush</p>
+              <h2>Editor Picks</h2>
+            </div>
+          </div>
+          <div id="editorGrid" class="game-grid"></div>
+        </section>
+      </section>
+
+      <section id="library" class="page" data-page="library">
+        <section class="page-top library-hero">
+          <div class="hero-bg" aria-hidden="true"></div>
+          <div class="pixel-field" aria-hidden="true"></div>
+          <div class="library-hero-inner">
+            <p class="eyebrow">PixelRush library</p>
+            <h1>Browse Games</h1>
+            <p>Filter the full collection and launch any game inside PixelRush instantly.</p>
+            <div class="library-hero-meta" aria-label="Library stats">
+              <span><strong id="libraryCount">—</strong> games</span>
+              <span><strong id="libraryCatCount">—</strong> categories</span>
+              <span><strong>0</strong> redirects</span>
+            </div>
+          </div>
+        </section>
+        <section class="control-band">
+          <label class="search-shell">
+            <span>Search</span>
+            <input id="librarySearch" type="search" placeholder="Search the PixelRush library" />
+          </label>
+          <label class="sort-shell">
+            <span>Sort</span>
+            <select id="sortSelect">
+              <option value="featured">Featured</option>
+              <option value="popular">Popular</option>
+              <option value="rating">Rating</option>
+              <option value="newest">Newest</option>
+              <option value="az">A-Z</option>
+            </select>
+          </label>
+          <div id="libraryFilters" class="chip-row" aria-label="Library categories"></div>
+        </section>
+        <div id="libraryGrid" class="game-grid library-grid"></div>
+        <div id="emptyState" class="empty-state" hidden>
+          <h2>No PixelRush games found</h2>
+          <p>Try a different search or category filter.</p>
+        </div>
+      </section>
+
+      <section id="play" class="page" data-page="play">
+        <div class="player-layout">
+          <aside class="player-meta">
+            <button id="backToGames" class="secondary-button">← Back to games</button>
+            <p id="playBadge" class="eyebrow">PixelRush game</p>
+            <h1 id="playTitle"></h1>
+            <p id="playDescription"></p>
+            <div class="meta-list">
+              <span id="playCategory"></span>
+              <span id="playCount"></span>
+            </div>
+            <button id="favoriteButton" class="secondary-button">Save favorite</button>
+          </aside>
+          <section class="player-shell">
+            <div class="player-toolbar">
+              <span id="playerStatus">Ready</span>
+              <div class="toolbar-actions">
+                <button id="restartGameButton" class="icon-button" aria-label="Restart game">↻</button>
+                <button id="fullscreenButton" class="icon-button" aria-label="Fullscreen game">⛶</button>
+              </div>
+            </div>
+            <div id="gameFrameViewport" class="game-frame-viewport">
+              <iframe
+                id="gameFrame"
+                title="PixelRush game player"
+                sandbox="allow-scripts"
+                tabindex="0"
+                allow="autoplay; fullscreen; gamepad *; xr-spatial-tracking"
+                allowfullscreen
+                referrerpolicy="no-referrer"
+              ></iframe>
+              <div class="online-frame-mask" aria-hidden="true"></div>
+            </div>
+          </section>
+        </div>
+        <section class="content-section">
+          <div class="section-heading compact">
+            <h2>Related Games</h2>
+          </div>
+          <div id="relatedGrid" class="game-grid compact-grid"></div>
+        </section>
+      </section>
+</main>
+
+    <footer class="site-footer">
+      <strong>PixelRush</strong>
+      <span>Premium browser games, built for instant play.</span>
+    </footer>
+
+    <script src="./y8-catalog.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

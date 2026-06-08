@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "import:y8": "node tools/y8-importer.mjs --limit=500"
+  },
+  "devDependencies": {}
+}

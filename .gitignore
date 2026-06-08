@@ -1,0 +1,11 @@
+# Personal Claude Code settings & notes (never commit)
+.claude/settings.local.json
+.claude/progress/
+
+# Dependencies
+node_modules/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log
