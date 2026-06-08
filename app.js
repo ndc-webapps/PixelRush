@@ -4004,11 +4004,23 @@ function buildExternalEmbedDoc(game) {
 </html>`;
 }
 
+// Send a custom event to Vercel Web Analytics (no-op if analytics isn't loaded).
+function trackEvent(name, data) {
+  try {
+    if (typeof window.va === "function") window.va("event", { name, ...(data ? { data } : {}) });
+  } catch {}
+}
+
 function openGame(id) {
   const game = gameById(id);
   if (!game || !game.isPlayable) return;
   state.currentGame = game;
   state.playCounts[id] = (state.playCounts[id] || 0) + 1;
+  trackEvent("play_game", {
+    game: game.title,
+    category: game.category || "Unknown",
+    source: game.isY8 ? "Y8" : game.custom ? "Custom" : "Other",
+  });
   state.recent = [id, ...state.recent.filter((gameId) => gameId !== id)].slice(0, 12);
   saveJson(PLAYS_KEY, state.playCounts);
   saveJson(RECENT_KEY, state.recent);
