@@ -3,7 +3,7 @@ const PLAYS_KEY = "pixelrush_play_counts_v1";
 const FAV_KEY = "pixelrush_favorites_v1";
 const RECENT_KEY = "pixelrush_recent_games_v1";
 const CURRENT_KEY = "pixelrush_current_game_v1";
-const LOGO_SRC = "./assets/pixelrush-logo.png";
+const LOGO_SRC = "/assets/pixelrush-logo.png";
 
 const categories = ["All","Arcade","Puzzle","Strategy","Board","Racing","Shooter","Cards","Sports","Brain","Retro","Classic","Creative","Shooting","Survival","Cooking","Dress Up","Adventure"];
 
@@ -3492,7 +3492,7 @@ function activeY8Games() {
 }
 
 async function loadY8Catalog() {
-  const endpoints = ["./y8-catalog.js"];
+  const endpoints = ["/y8-catalog.js"];
   try {
     if (Array.isArray(window.PIXELRUSH_Y8_GAMES) && window.PIXELRUSH_Y8_GAMES.length > dynamicY8Games.length) {
       dynamicY8Games = window.PIXELRUSH_Y8_GAMES.map((game, index) => normalizeY8Game(game, index));
