@@ -3858,6 +3858,10 @@ function renderAll() {
 function setRoute(hash) {
   const defaultPage = $("#home") ? "home" : "admin";
   const page = (hash || location.hash || `#${defaultPage}`).replace("#", "");
+  // Leaving the player: drop the /play/<id> path so the URL/analytics return to "/".
+  if (page !== "play" && location.pathname.startsWith("/play/")) {
+    try { history.replaceState(null, "", "/" + (location.hash || "")); } catch {}
+  }
   $$(".page").forEach((screen) => screen.classList.toggle("is-active", screen.dataset.page === page || (!$("#home") && screen.dataset.page === "admin")));
   $$(".main-nav a").forEach((link) => {
     const href = link.getAttribute("href") || "";
@@ -4022,7 +4026,25 @@ function trackEvent(name, data) {
   } catch {}
 }
 
-function openGame(id) {
+function showPlaySection() {
+  $$(".page").forEach((s) => s.classList.toggle("is-active", s.dataset.page === "play"));
+  $$(".main-nav a").forEach((l) => l.classList.remove("is-active"));
+  $("#mainNav")?.classList.remove("is-open");
+}
+
+// Open a game from the URL path (/play/<id>). Returns true if it handled the route.
+function routeFromPath() {
+  const m = location.pathname.match(/^\/play\/(.+?)\/?$/);
+  if (!m) return false;
+  const id = decodeURIComponent(m[1]);
+  if (gameById(id)) {
+    openGame(id, { push: false });
+    return true;
+  }
+  return false;
+}
+
+function openGame(id, opts = {}) {
   const game = gameById(id);
   if (!game || !game.isPlayable) return;
   state.currentGame = game;
@@ -4065,7 +4087,12 @@ function openGame(id) {
   }
   frame.focus();
   renderRelated(game);
-  location.hash = "play";
+  showPlaySection();
+  // Give each game its own URL (/play/<id>) so it shows in Vercel Analytics "Pages"
+  // and survives refresh / can be shared. push:false when restoring from the URL.
+  if (opts.push !== false) {
+    try { history.pushState({ play: id }, "", "/play/" + encodeURIComponent(id)); } catch {}
+  }
   renderAll();
   requestAnimationFrame(() => {
     $("#play").scrollIntoView({ block: "start" });
@@ -4534,6 +4561,7 @@ bind("#gameType", "change", () => {
 });
 bind("#gameForm", "submit", publishCustomGame);
 window.addEventListener("hashchange", () => setRoute());
+window.addEventListener("popstate", () => { if (!routeFromPath()) setRoute(); });
 
 window.addEventListener("load", () => {
   setTimeout(() => $("#loader")?.classList.add("is-hidden"), 350);
@@ -4575,6 +4603,6 @@ setupAdminGate();
 if ($("#gameForm")) resetForm();
 migrateStoredCustomGames();
 renderAll();
-setRoute();
+if (!routeFromPath()) setRoute();
 if (typeof loadY8Catalog === "function") loadY8Catalog();
 
