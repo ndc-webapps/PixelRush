@@ -3480,15 +3480,25 @@ function guessY8Category(text = "") {
   return "Arcade";
 }
 
+// Caches: building/normalizing 1000+ games on every render froze mobile. Rebuild only when the data changes.
+let _activeY8Cache = null;
+let _allGamesCache = null;
+function invalidateGameCaches() {
+  _activeY8Cache = null;
+  _allGamesCache = null;
+}
+
 function activeY8Games() {
+  if (_activeY8Cache) return _activeY8Cache;
   const merged = [...dynamicY8Games, ...y8Games.map((game, index) => normalizeY8Game(game, index + 9000))];
   const seen = new Set();
-  return merged.filter((game) => {
+  _activeY8Cache = merged.filter((game) => {
     const key = game.externalUrl || game.id;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
+  return _activeY8Cache;
 }
 
 async function loadY8Catalog() {
@@ -3496,6 +3506,7 @@ async function loadY8Catalog() {
   try {
     if (Array.isArray(window.PIXELRUSH_Y8_GAMES) && window.PIXELRUSH_Y8_GAMES.length > dynamicY8Games.length) {
       dynamicY8Games = window.PIXELRUSH_Y8_GAMES.map((game, index) => normalizeY8Game(game, index));
+      invalidateGameCaches();
       renderAll();
     }
   } catch {}
@@ -3505,6 +3516,7 @@ async function loadY8Catalog() {
     const data = await response.json();
     if (Array.isArray(data.games) && data.games.length > dynamicY8Games.length) {
       dynamicY8Games = data.games.map((game, index) => normalizeY8Game(game, index));
+      invalidateGameCaches();
       renderAll();
     }
   } catch {
@@ -3538,7 +3550,9 @@ function saveJson(key, value) {
 }
 
 function allGames() {
-  return [...builtInGames, ...extraBuiltInGames, ...onlineGames, ...activeY8Games(), ...state.customGames].map(normalizeGame);
+  if (_allGamesCache) return _allGamesCache;
+  _allGamesCache = [...builtInGames, ...extraBuiltInGames, ...onlineGames, ...activeY8Games(), ...state.customGames].map(normalizeGame);
+  return _allGamesCache;
 }
 
 function normalizeGame(game, index = 0) {
@@ -3822,15 +3836,53 @@ function renderHome() {
   renderGrid($("#editorGrid"), portalGames.slice(12, 20));
 }
 
-function renderLibrary() {
+const LIBRARY_PAGE_SIZE = 60;
+let libraryGamesCache = [];
+let libraryShown = 0;
+
+// reset=true rebuilds the filtered list from scratch (filter/search/sort change or entering the page).
+// reset=false appends the next page (infinite scroll) — keeps the DOM small and mobile fast.
+function renderLibrary(reset = true) {
+  const grid = $("#libraryGrid");
+  if (!grid) return;
   renderFilters($("#libraryFilters"));
-  const games = filteredGames();
-  renderGrid($("#libraryGrid"), games);
-  $("#emptyState").hidden = games.length > 0;
+  if (reset) {
+    libraryGamesCache = filteredGames();
+    libraryShown = 0;
+    grid.innerHTML = "";
+  }
+  const next = libraryGamesCache.slice(libraryShown, libraryShown + LIBRARY_PAGE_SIZE);
+  grid.insertAdjacentHTML("beforeend", next.map(renderCard).join(""));
+  libraryShown += next.length;
+  $("#emptyState").hidden = libraryGamesCache.length > 0;
   const countEl = $("#libraryCount");
   if (countEl) countEl.textContent = allGames().filter((g) => g.isPlayable).length.toLocaleString();
   const catEl = $("#libraryCatCount");
   if (catEl) catEl.textContent = Math.max(0, liveCategories().length - 1); // minus "All"
+  observeLibrarySentinel();
+}
+
+let librarySentinelObserver = null;
+function observeLibrarySentinel() {
+  const grid = $("#libraryGrid");
+  if (!grid) return;
+  let sentinel = $("#librarySentinel");
+  if (!sentinel) {
+    sentinel = document.createElement("div");
+    sentinel.id = "librarySentinel";
+    sentinel.setAttribute("aria-hidden", "true");
+    grid.after(sentinel);
+  }
+  const moreLeft = libraryShown < libraryGamesCache.length;
+  sentinel.style.height = moreLeft ? "1px" : "0";
+  if (!librarySentinelObserver) {
+    librarySentinelObserver = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting) && libraryShown < libraryGamesCache.length) {
+        renderLibrary(false);
+      }
+    }, { rootMargin: "600px 0px" });
+    librarySentinelObserver.observe(sentinel);
+  }
 }
 
 function renderAdminList() {
@@ -3850,7 +3902,9 @@ function renderAdminList() {
 
 function renderAll() {
   if ($("#home")) renderHome();
-  if ($("#library")) renderLibrary();
+  // Only rebuild the (large) library grid when it's actually on screen — avoids
+  // a multi-second freeze rebuilding 1000+ cards on every navigation.
+  if ($("#library")?.classList.contains("is-active")) renderLibrary();
   if ($("#customGamesList")) renderAdminList();
   if (state.currentGame && $("#relatedGrid")) renderRelated(state.currentGame);
 }
@@ -4328,6 +4382,7 @@ function migrateStoredCustomGames() {
     return migrated;
   });
   if (changed) saveJson(STORE_KEY, state.customGames);
+  invalidateGameCaches();
 }
 
 function publishCustomGame(event) {
@@ -4372,6 +4427,7 @@ function publishCustomGame(event) {
   if (index >= 0) state.customGames[index] = game;
   else state.customGames.unshift(game);
   saveJson(STORE_KEY, state.customGames);
+  invalidateGameCaches();
   renderAll();
   resetForm();
   location.hash = "library";
@@ -4403,6 +4459,7 @@ function deleteCustomGame(id) {
   state.favorites = state.favorites.filter((gameId) => gameId !== id);
   delete state.playCounts[id];
   saveJson(STORE_KEY, state.customGames);
+  invalidateGameCaches();
   saveJson(FAV_KEY, state.favorites);
   saveJson(PLAYS_KEY, state.playCounts);
   renderAll();
